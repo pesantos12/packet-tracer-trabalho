@@ -1,0 +1,56 @@
+
+-- Criação de Vlan no switch novo (Switch L3 BH 2)
+
+enable
+configure terminal
+vlan 90
+	name Produção
+	eixt
+vlan 100
+	name Logistica
+	exit
+vlan 110
+	name Qualidade
+	exit
+exit
+
+/* 
+Portas utilizadas entre o Switch L3 BH e o L3 BH 2:
+FastEthernet0/23
+FastEthernet0/24
+*/ 
+
+Switch L3 BH e L3 BH 2:
+enable
+configure terminal
+interface range FastEthernet 0/23 - 24
+channel-group 1 mode active
+no shutdown
+exit
+
+-- Configurando o Trunk no Link lógico
+
+Switch L3 BH e L3 BH 2:
+enable
+configure terminal
+interface port-channel 1
+switchport trunk encapsulation dot1q
+switchport mode trunk
+exit
+
+-- Configurando o acesso dos novos PCs
+
+Switch L3 BH 2:
+enable
+configura terminal
+interface FastEthernet 0/1
+switchport mode access
+switchport access vlan 90
+exit
+interface FastEthernet 0/2
+switchport mode access
+switchport access vlan 100
+exit
+interface FastEthernet 0/3
+switchport mode access
+switchport access vlan 110
